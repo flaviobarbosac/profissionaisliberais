@@ -53,7 +53,7 @@ builder.Services.AddSingleton(asaasConfig);
 builder.Services.AddHttpClient<IAsaasClient, AsaasClient>();
 
 // AutoMapper
-builder.Services.AddAutoMapper(typeof(MappingProfiles).Assembly);
+builder.Services.AddAutoMapper(cfg => cfg.AddMaps(typeof(MappingProfiles).Assembly));
 
 var app = builder.Build();
 
