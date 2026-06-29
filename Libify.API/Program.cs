@@ -57,7 +57,8 @@ builder.Services.AddAutoMapper(cfg => cfg.AddMaps(typeof(MappingProfiles).Assemb
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
+// Swagger habilitado em Development e Homologacao (desabilitado em Production)
+if (!app.Environment.IsProduction())
 {
     app.UseSwagger();
     app.UseSwaggerUI();

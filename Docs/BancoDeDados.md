@@ -28,10 +28,12 @@ cd Libify.API
 dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Host=pgsql01.redehost.com.br;Port=5432;Database=<db>;Username=libify-admin;Password=<senha>;"
 ```
 
-**Em produção — variável de ambiente:**
+**Em homologação / produção — variável de ambiente (no servidor):**
 
 ```
-ConnectionStrings__DefaultConnection = Host=...;Password=<senha>;
+ConnectionStrings__DefaultConnection = Host=...;Database=...;Username=libify-admin;Password=<senha>
+Jwt__Key = <chave-forte>
+Asaas__PlatformApiKey = <api-key>
 ```
 
 **Para rodar migrations (design-time):**
@@ -39,6 +41,20 @@ ConnectionStrings__DefaultConnection = Host=...;Password=<senha>;
 ```powershell
 $env:PROFLIB_CONNECTION = "Host=pgsql01.redehost.com.br;Port=5432;Database=<db>;Username=libify-admin;Password=<senha>;"
 ```
+
+## Ambientes (Development / Homologacao / Production)
+
+A API carrega `appsettings.json` (base) + `appsettings.{ASPNETCORE_ENVIRONMENT}.json`:
+
+| Ambiente     | Arquivo                          | Banco           | Asaas    | Swagger |
+|--------------|----------------------------------|-----------------|----------|---------|
+| Development  | `appsettings.Development.json`   | `libify_dev`    | sandbox  | sim     |
+| Homologacao  | `appsettings.Homologacao.json`   | `libify_homolog`| sandbox  | sim     |
+| Production   | `appsettings.Production.json`    | `libify_prod`   | produção | não     |
+
+- Todos os arquivos são commitados **com `Password=` vazio** — a senha entra por User Secrets (dev) ou variável de ambiente (homolog/prod).
+- Selecionar o ambiente: variável `ASPNETCORE_ENVIRONMENT` ou os perfis em `Properties/launchSettings.json` (`Development`, `Homologacao`, `Production`).
+- Ajuste os nomes dos bancos (`libify_dev`/`libify_homolog`/`libify_prod`) conforme os que você criar na RedeHost.
 
 ## Acesso remoto (importante)
 
