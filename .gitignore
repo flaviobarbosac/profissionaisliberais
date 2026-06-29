@@ -1,0 +1,21 @@
+## .NET
+bin/
+obj/
+*.user
+*.suo
+.vs/
+
+## Rider
+.idea/
+
+## Cursor / editor local state
+.cursor/
+
+## Build results
+[Dd]ebug/
+[Rr]elease/
+TestResults/
+
+## Environment / secrets
+appsettings.*.local.json
+*.env
