@@ -4,10 +4,10 @@ namespace Libify.API.Dto
 {
     public class LancamentoFinanceiroDto
     {
-        public int Id { get; set; }
-        public int UsuarioId { get; set; }
-        public int? ClienteId { get; set; }
-        public int? CobrancaId { get; set; }
+        public Guid Id { get; set; }
+        public Guid UsuarioId { get; set; }
+        public Guid? ClienteId { get; set; }
+        public Guid? CobrancaId { get; set; }
         public TipoLancamento Tipo { get; set; }
         public StatusLancamento Status { get; set; }
         public string Descricao { get; set; } = string.Empty;

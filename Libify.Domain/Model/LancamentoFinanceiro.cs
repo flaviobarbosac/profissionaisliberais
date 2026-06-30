@@ -9,16 +9,16 @@ namespace Libify.Domain.Model
     /// Lançamento de contas a pagar ou a receber (financeiro).
     /// Despesas podem ser lançadas por OCR (foto do comprovante via Gemini).
     /// </summary>
-    public class LancamentoFinanceiro : ModelBase
+    public class LancamentoFinanceiro : ModelBase, ITenantOwned
     {
         [Required]
-        public int UsuarioId { get; set; }
+        public Guid UsuarioId { get; set; }
         public Usuario Usuario { get; set; } = null!;
 
-        public int? ClienteId { get; set; }
+        public Guid? ClienteId { get; set; }
         public Cliente? Cliente { get; set; }
 
-        public int? CobrancaId { get; set; }
+        public Guid? CobrancaId { get; set; }
         public Cobranca? Cobranca { get; set; }
 
         public TipoLancamento Tipo { get; set; } = TipoLancamento.Pagar;

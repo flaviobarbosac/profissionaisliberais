@@ -1,5 +1,5 @@
 using System.Net;
-using Newtonsoft.Json;
+using Microsoft.EntityFrameworkCore;
 
 namespace Libify.API.Middleware
 {
@@ -35,13 +35,17 @@ namespace Libify.API.Middleware
                 ArgumentException => HttpStatusCode.BadRequest,
                 UnauthorizedAccessException => HttpStatusCode.Unauthorized,
                 FileNotFoundException => HttpStatusCode.NotFound,
+                DbUpdateConcurrencyException => HttpStatusCode.Conflict,
                 _ => HttpStatusCode.InternalServerError
             };
 
+            var mensagem = statusCode == HttpStatusCode.Conflict
+                ? "O registro foi alterado por outra operação. Recarregue os dados e tente novamente."
+                : "Ocorreu um erro inesperado.";
+
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = (int)statusCode;
-            var response = new { error = "Ocorreu um erro inesperado." };
-            return context.Response.WriteAsync(JsonConvert.SerializeObject(response));
+            return context.Response.WriteAsJsonAsync(new { error = mensagem });
         }
     }
 }

@@ -2,8 +2,8 @@ namespace Libify.API.Dto
 {
     public class PostDto
     {
-        public int Id { get; set; }
-        public int UsuarioId { get; set; }
+        public Guid Id { get; set; }
+        public Guid UsuarioId { get; set; }
         public string? FotoAntesUrl { get; set; }
         public string? FotoDepoisUrl { get; set; }
         public string? Legenda { get; set; }

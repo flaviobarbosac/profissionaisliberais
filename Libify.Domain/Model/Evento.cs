@@ -7,13 +7,13 @@ namespace Libify.Domain.Model
     /// <summary>
     /// Compromisso na agenda (sincronizado com Google Agenda / Meet / Maps).
     /// </summary>
-    public class Evento : ModelBase
+    public class Evento : ModelBase, ITenantOwned
     {
         [Required]
-        public int UsuarioId { get; set; }
+        public Guid UsuarioId { get; set; }
         public Usuario Usuario { get; set; } = null!;
 
-        public int? ClienteId { get; set; }
+        public Guid? ClienteId { get; set; }
         public Cliente? Cliente { get; set; }
 
         [Required]

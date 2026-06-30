@@ -1,4 +1,3 @@
-using Libify.Domain.Helpers;
 using Libify.Domain.Model.Base;
 using Libify.Repository.Interface;
 using Libify.Services.Interface;
@@ -14,37 +13,19 @@ namespace Libify.Services
             _repository = repository;
         }
 
-        public async Task<T?> GetByIdAsync(int id)
-        {
-            return await _repository.GetByIdAsync(id);
-        }
+        public Task<T?> GetByIdAsync(Guid id) => _repository.GetByIdAsync(id);
 
-        public async Task<IEnumerable<T>> GetAllAsync()
-        {
-            return await _repository.GetAllAsync();
-        }
+        public Task<IEnumerable<T>> GetAllAsync() => _repository.GetAllAsync();
 
-        public async Task AddAsync(T entity)
-        {
-            entity.CreatedAt = DateTimeHelper.Now;
-            entity.UpdatedAt = DateTimeHelper.Now;
-            await _repository.AddAsync(entity);
-        }
+        public Task<(IEnumerable<T> Items, int Total)> GetPagedAsync(int page, int pageSize)
+            => _repository.GetPagedAsync(page, pageSize);
 
-        public async Task UpdateAsync(T entity)
-        {
-            entity.UpdatedAt = DateTimeHelper.Now;
-            await _repository.UpdateAsync(entity);
-        }
+        public Task AddAsync(T entity) => _repository.AddAsync(entity);
 
-        public async Task DeleteAsync(int id)
-        {
-            await _repository.DeleteAsync(id);
-        }
+        public Task UpdateAsync(T entity) => _repository.UpdateAsync(entity);
 
-        public async Task SoftDeleteAsync(int id)
-        {
-            await _repository.SoftDeleteAsync(id);
-        }
+        public Task DeleteAsync(Guid id) => _repository.DeleteAsync(id);
+
+        public Task SoftDeleteAsync(Guid id) => _repository.SoftDeleteAsync(id);
     }
 }

@@ -8,10 +8,10 @@ namespace Libify.Domain.Model
     /// <summary>
     /// Assinatura Premium do usuário (mensal/semestral/anual), cobrada de forma recorrente via Asaas.
     /// </summary>
-    public class Plano : ModelBase
+    public class Plano : ModelBase, ITenantOwned
     {
         [Required]
-        public int UsuarioId { get; set; }
+        public Guid UsuarioId { get; set; }
         public Usuario Usuario { get; set; } = null!;
 
         public TipoPlano Tipo { get; set; } = TipoPlano.Mensal;

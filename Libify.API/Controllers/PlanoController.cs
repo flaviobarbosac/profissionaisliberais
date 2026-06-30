@@ -5,7 +5,11 @@ using Libify.Services.Interface;
 
 namespace Libify.API.Controllers
 {
-    public class PlanoController : BaseController<Plano, PlanoDto>
+    /// <summary>
+    /// Somente leitura: a assinatura (Plano) é criada/atualizada pelo fluxo de
+    /// assinatura recorrente (Asaas), não pelo CRUD genérico — evita burlar pagamento.
+    /// </summary>
+    public class PlanoController : ReadOnlyController<Plano, PlanoDto>
     {
         public PlanoController(IBaseServices<Plano> services, IMapper mapper) : base(services, mapper) { }
     }

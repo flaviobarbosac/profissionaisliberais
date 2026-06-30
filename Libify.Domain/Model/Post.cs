@@ -6,10 +6,10 @@ namespace Libify.Domain.Model
     /// <summary>
     /// Post de portfólio (antes/depois) com legenda gerada pelo Gemini e publicação no Instagram.
     /// </summary>
-    public class Post : ModelBase
+    public class Post : ModelBase, ITenantOwned
     {
         [Required]
-        public int UsuarioId { get; set; }
+        public Guid UsuarioId { get; set; }
         public Usuario Usuario { get; set; } = null!;
 
         [MaxLength(500)]

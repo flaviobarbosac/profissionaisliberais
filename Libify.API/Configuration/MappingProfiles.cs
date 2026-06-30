@@ -21,6 +21,7 @@ namespace Libify.API.Configuration
             CreateMap<Tarefa, TarefaDto>().ReverseMap();
             CreateMap<Post, PostDto>().ReverseMap();
             CreateMap<Plano, PlanoDto>().ReverseMap();
+            CreateMap<Dispositivo, DispositivoDto>();
         }
     }
 }

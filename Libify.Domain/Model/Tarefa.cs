@@ -6,10 +6,10 @@ namespace Libify.Domain.Model
     /// <summary>
     /// Tarefa / follow-up (sincroniza com Google Tasks / Keep).
     /// </summary>
-    public class Tarefa : ModelBase
+    public class Tarefa : ModelBase, ITenantOwned
     {
         [Required]
-        public int UsuarioId { get; set; }
+        public Guid UsuarioId { get; set; }
         public Usuario Usuario { get; set; } = null!;
 
         [Required]

@@ -20,6 +20,8 @@ namespace Libify.Domain.Model
         [MaxLength(20)]
         public string? Telefone { get; set; }
 
+        public bool TelefoneVerificado { get; set; }
+
         [MaxLength(18)]
         public string? CpfCnpj { get; set; }
 

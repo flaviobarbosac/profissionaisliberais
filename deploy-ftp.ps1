@@ -13,7 +13,9 @@ param(
     [string]$Configuration = "Release",
     [string]$FtpHost = "ftp.elroy.com.br",
     [string]$FtpUser = "flaviobarbosa",
-    [string]$FtpRoot = "/wwwroot/libify"
+    [string]$FtpRoot = "/wwwroot/libify",
+    [switch]$SelfContained,
+    [string]$Runtime = "win-x64"
 )
 
 $ErrorActionPreference = "Stop"
@@ -24,7 +26,13 @@ $out  = Join-Path $env:TEMP "libify-publish"
 if (Test-Path $out) { Remove-Item -Recurse -Force $out }
 
 Write-Host "==> Publicando ($Configuration)..." -ForegroundColor Cyan
-dotnet publish $proj -c $Configuration -o $out --nologo
+# IsTransformWebConfigDisabled: mantem nosso web.config (HttpPlatformHandler) intacto
+$pubArgs = @($proj, "-c", $Configuration, "-o", $out, "--nologo", "-p:IsTransformWebConfigDisabled=true")
+if ($SelfContained) {
+    Write-Host "    (self-contained, $Runtime)" -ForegroundColor DarkCyan
+    $pubArgs += @("-r", $Runtime, "--self-contained", "true")
+}
+dotnet publish @pubArgs
 if ($LASTEXITCODE -ne 0) { throw "Falha no dotnet publish." }
 
 # Normaliza o caminho (evita problemas com short path do %TEMP%, ex.: WINDOW~1)

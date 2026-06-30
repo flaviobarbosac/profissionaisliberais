@@ -6,10 +6,10 @@ namespace Libify.Domain.Model
     /// <summary>
     /// Cliente (pagador) de um prestador de serviço.
     /// </summary>
-    public class Cliente : ModelBase
+    public class Cliente : ModelBase, ITenantOwned
     {
         [Required]
-        public int UsuarioId { get; set; }
+        public Guid UsuarioId { get; set; }
         public Usuario Usuario { get; set; } = null!;
 
         [Required]

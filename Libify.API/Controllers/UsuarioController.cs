@@ -5,7 +5,11 @@ using Libify.Services.Interface;
 
 namespace Libify.API.Controllers
 {
-    public class UsuarioController : BaseController<Usuario, UsuarioDto>
+    /// <summary>
+    /// Somente leitura: a criação/atualização/remoção do Usuario (raiz do tenant)
+    /// é controlada pelo fluxo de autenticação, não pelo CRUD genérico.
+    /// </summary>
+    public class UsuarioController : ReadOnlyController<Usuario, UsuarioDto>
     {
         public UsuarioController(IBaseServices<Usuario> services, IMapper mapper) : base(services, mapper) { }
     }

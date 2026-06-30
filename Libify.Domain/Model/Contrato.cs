@@ -7,14 +7,14 @@ namespace Libify.Domain.Model
     /// <summary>
     /// Contrato gerado a partir de uma proposta aceita, com aceite/assinatura digital.
     /// </summary>
-    public class Contrato : ModelBase
+    public class Contrato : ModelBase, ITenantOwned
     {
         [Required]
-        public int UsuarioId { get; set; }
+        public Guid UsuarioId { get; set; }
         public Usuario Usuario { get; set; } = null!;
 
         [Required]
-        public int PropostaId { get; set; }
+        public Guid PropostaId { get; set; }
         public Proposta Proposta { get; set; } = null!;
 
         public ContratoStatus Status { get; set; } = ContratoStatus.Pendente;

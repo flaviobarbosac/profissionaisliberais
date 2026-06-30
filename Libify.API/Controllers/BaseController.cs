@@ -6,39 +6,14 @@ using Libify.Services.Interface;
 namespace Libify.API.Controllers
 {
     /// <summary>
-    /// Controller CRUD genérico. Cada recurso herda definindo a entidade e o DTO,
+    /// Controller CRUD genérico e versionado. Herda a leitura de <see cref="ReadOnlyController{TEntity, TDto}"/>
+    /// e adiciona Post/Put/Delete para os recursos com ciclo de vida completo via API,
     /// evitando duplicação do mesmo fluxo Map/Service em todos os controllers.
     /// </summary>
-    [Route("api/[controller]")]
-    [ApiController]
-    public abstract class BaseController<TEntity, TDto> : ControllerBase
+    public abstract class BaseController<TEntity, TDto> : ReadOnlyController<TEntity, TDto>
         where TEntity : ModelBase
     {
-        protected readonly IBaseServices<TEntity> Services;
-        protected readonly IMapper Mapper;
-
-        protected BaseController(IBaseServices<TEntity> services, IMapper mapper)
-        {
-            Services = services;
-            Mapper = mapper;
-        }
-
-        [HttpGet]
-        public virtual async Task<IActionResult> Get()
-        {
-            var resultado = await Services.GetAllAsync();
-            return Ok(Mapper.Map<IEnumerable<TDto>>(resultado));
-        }
-
-        [HttpGet("{id}")]
-        public virtual async Task<ActionResult<TDto>> Get(int id)
-        {
-            var resultado = await Services.GetByIdAsync(id);
-            if (resultado == null)
-                return NotFound();
-
-            return Ok(Mapper.Map<TDto>(resultado));
-        }
+        protected BaseController(IBaseServices<TEntity> services, IMapper mapper) : base(services, mapper) { }
 
         [HttpPost]
         public virtual async Task<ActionResult<TDto>> Post([FromBody] TDto dados)
@@ -49,8 +24,8 @@ namespace Libify.API.Controllers
             return CreatedAtAction(nameof(Get), new { id = entidade.Id }, criado);
         }
 
-        [HttpPut("{id}")]
-        public virtual async Task<IActionResult> Put(int id, [FromBody] TDto dados)
+        [HttpPut("{id:guid}")]
+        public virtual async Task<IActionResult> Put(Guid id, [FromBody] TDto dados)
         {
             var entidade = Mapper.Map<TEntity>(dados);
             entidade.Id = id;
@@ -58,8 +33,8 @@ namespace Libify.API.Controllers
             return Ok(Mapper.Map<TDto>(entidade));
         }
 
-        [HttpDelete("{id}")]
-        public virtual async Task<IActionResult> Delete(int id)
+        [HttpDelete("{id:guid}")]
+        public virtual async Task<IActionResult> Delete(Guid id)
         {
             await Services.SoftDeleteAsync(id);
             return NoContent();

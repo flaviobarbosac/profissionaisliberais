@@ -4,11 +4,11 @@ namespace Libify.API.Dto
 {
     public class NotaFiscalDto
     {
-        public int Id { get; set; }
-        public int UsuarioId { get; set; }
-        public int ClienteId { get; set; }
-        public int? ContratoId { get; set; }
-        public int? CobrancaId { get; set; }
+        public Guid Id { get; set; }
+        public Guid UsuarioId { get; set; }
+        public Guid ClienteId { get; set; }
+        public Guid? ContratoId { get; set; }
+        public Guid? CobrancaId { get; set; }
         public StatusNotaFiscal Status { get; set; }
         public decimal Valor { get; set; }
         public string? DiscriminacaoServico { get; set; }

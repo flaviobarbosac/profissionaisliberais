@@ -4,10 +4,10 @@ namespace Libify.API.Dto
 {
     public class CobrancaDto
     {
-        public int Id { get; set; }
-        public int UsuarioId { get; set; }
-        public int ClienteId { get; set; }
-        public int? PropostaId { get; set; }
+        public Guid Id { get; set; }
+        public Guid UsuarioId { get; set; }
+        public Guid ClienteId { get; set; }
+        public Guid? PropostaId { get; set; }
         public FormaPagamento FormaPagamento { get; set; }
         public StatusCobranca Status { get; set; }
         public decimal Valor { get; set; }

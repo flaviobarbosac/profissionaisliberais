@@ -8,17 +8,17 @@ namespace Libify.Domain.Model
     /// <summary>
     /// Cobrança (PIX / Boleto / Cartão) criada no Asaas para um cliente.
     /// </summary>
-    public class Cobranca : ModelBase
+    public class Cobranca : ModelBase, ITenantOwned
     {
         [Required]
-        public int UsuarioId { get; set; }
+        public Guid UsuarioId { get; set; }
         public Usuario Usuario { get; set; } = null!;
 
         [Required]
-        public int ClienteId { get; set; }
+        public Guid ClienteId { get; set; }
         public Cliente Cliente { get; set; } = null!;
 
-        public int? PropostaId { get; set; }
+        public Guid? PropostaId { get; set; }
         public Proposta? Proposta { get; set; }
 
         public FormaPagamento FormaPagamento { get; set; } = FormaPagamento.Pix;

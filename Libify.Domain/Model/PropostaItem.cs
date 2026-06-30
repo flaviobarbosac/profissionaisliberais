@@ -7,13 +7,15 @@ namespace Libify.Domain.Model
     /// <summary>
     /// Item (serviço marcado) de uma proposta, com quantidade e valor.
     /// </summary>
-    public class PropostaItem : ModelBase
+    public class PropostaItem : ModelBase, ITenantOwned
     {
+        public Guid UsuarioId { get; set; }
+
         [Required]
-        public int PropostaId { get; set; }
+        public Guid PropostaId { get; set; }
         public Proposta Proposta { get; set; } = null!;
 
-        public int? ServicoId { get; set; }
+        public Guid? ServicoId { get; set; }
         public Servico? Servico { get; set; }
 
         [Required]

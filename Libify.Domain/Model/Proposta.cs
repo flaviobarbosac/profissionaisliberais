@@ -8,14 +8,14 @@ namespace Libify.Domain.Model
     /// <summary>
     /// Proposta comercial enviada a um cliente (rascunho/enviada/aceita/recusada).
     /// </summary>
-    public class Proposta : ModelBase
+    public class Proposta : ModelBase, ITenantOwned
     {
         [Required]
-        public int UsuarioId { get; set; }
+        public Guid UsuarioId { get; set; }
         public Usuario Usuario { get; set; } = null!;
 
         [Required]
-        public int ClienteId { get; set; }
+        public Guid ClienteId { get; set; }
         public Cliente Cliente { get; set; } = null!;
 
         [MaxLength(200)]

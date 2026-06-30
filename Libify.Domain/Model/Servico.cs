@@ -7,10 +7,10 @@ namespace Libify.Domain.Model
     /// <summary>
     /// Item do catálogo de serviços do prestador (preço padrão).
     /// </summary>
-    public class Servico : ModelBase
+    public class Servico : ModelBase, ITenantOwned
     {
         [Required]
-        public int UsuarioId { get; set; }
+        public Guid UsuarioId { get; set; }
         public Usuario Usuario { get; set; } = null!;
 
         [Required]

@@ -4,9 +4,9 @@ namespace Libify.API.Dto
 {
     public class EventoDto
     {
-        public int Id { get; set; }
-        public int UsuarioId { get; set; }
-        public int? ClienteId { get; set; }
+        public Guid Id { get; set; }
+        public Guid UsuarioId { get; set; }
+        public Guid? ClienteId { get; set; }
         public string Titulo { get; set; } = string.Empty;
         public string? Descricao { get; set; }
         public DateTime Inicio { get; set; }

@@ -1,0 +1,46 @@
+name: libify-dev
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: libify-postgres
+    environment:
+      POSTGRES_USER: libify
+      POSTGRES_PASSWORD: libify
+      POSTGRES_DB: libify_dev
+    ports:
+      - "5432:5432"
+    volumes:
+      - libify-postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U libify -d libify_dev"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: libify-rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  aspire-dashboard:
+    image: mcr.microsoft.com/dotnet/aspire-dashboard:9.0
+    container_name: libify-aspire
+    environment:
+      DOTNET_DASHBOARD_UNSECURED_ALLOW_ANONYMOUS: "true"
+    ports:
+      - "18888:18888"
+      - "18889:18889"
+
+volumes:
+  libify-postgres:

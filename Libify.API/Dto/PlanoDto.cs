@@ -4,8 +4,8 @@ namespace Libify.API.Dto
 {
     public class PlanoDto
     {
-        public int Id { get; set; }
-        public int UsuarioId { get; set; }
+        public Guid Id { get; set; }
+        public Guid UsuarioId { get; set; }
         public TipoPlano Tipo { get; set; }
         public decimal Valor { get; set; }
         public DateTime InicioEm { get; set; }
