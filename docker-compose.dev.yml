@@ -33,6 +33,19 @@ services:
       timeout: 5s
       retries: 5
 
+  redis:
+    image: redis:7-alpine
+    container_name: libify-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - libify-redis:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   aspire-dashboard:
     image: mcr.microsoft.com/dotnet/aspire-dashboard:9.0
     container_name: libify-aspire
@@ -44,3 +57,4 @@ services:
 
 volumes:
   libify-postgres:
+  libify-redis:

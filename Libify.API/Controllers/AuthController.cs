@@ -15,10 +15,12 @@ namespace Libify.API.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _auth;
+        private readonly ILogger<AuthController> _logger;
 
-        public AuthController(IAuthService auth)
+        public AuthController(IAuthService auth, ILogger<AuthController> logger)
         {
             _auth = auth;
+            _logger = logger;
         }
 
         [HttpPost("google")]
@@ -37,6 +39,7 @@ namespace Libify.API.Controllers
             }
             catch (InvalidOperationException ex)
             {
+                _logger.LogWarning(ex, "Falha no login Google (DeviceId: {DeviceId}).", req.DeviceId);
                 return Unauthorized(new { erro = ex.Message });
             }
         }
@@ -55,6 +58,7 @@ namespace Libify.API.Controllers
             }
             catch (InvalidOperationException ex)
             {
+                _logger.LogWarning(ex, "Falha no refresh de token (DeviceId: {DeviceId}).", req.DeviceId);
                 return Unauthorized(new { erro = ex.Message });
             }
         }
