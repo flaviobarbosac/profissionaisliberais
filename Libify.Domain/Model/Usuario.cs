@@ -52,8 +52,12 @@ namespace Libify.Domain.Model
         [MaxLength(255)]
         public string? AsaasAccountId { get; set; }
 
+    [MaxLength(512)]
+    public string? AsaasApiKey { get; set; }
+
+        /// <summary>Customer na conta plataforma Libify (assinatura Premium).</summary>
         [MaxLength(255)]
-        public string? AsaasApiKey { get; set; }
+        public string? AsaasPlatformCustomerId { get; set; }
 
         public StatusContaAsaas StatusContaAsaas { get; set; } = StatusContaAsaas.Pendente;
 

@@ -64,7 +64,7 @@ namespace Libify.Test.Infrastructure
 
             var act = async () => await client.CriarClienteAsync("k", new AsaasClienteRequest("Fulano", "12345678900"));
 
-            await act.Should().ThrowAsync<HttpRequestException>();
+            await act.Should().ThrowAsync<AsaasApiException>();
         }
     }
 }

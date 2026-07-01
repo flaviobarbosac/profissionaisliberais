@@ -1,0 +1,12 @@
+aws_region   = "sa-east-1"
+project      = "libify"
+environment  = "dev"
+domain_name  = "libify.com.br"
+
+# Amplify + GitHub (PAT com repo + admin:repo_hook; instalar AWS Amplify GitHub App)
+# github_repository   = "https://github.com/flaviobarbosac/prosiffionaisliberais-front"
+# github_branch       = "develop"
+# github_access_token = "ghp_..."
+
+# Restringir aspire.dev ao seu IP (exemplo):
+# aspire_allowed_cidr = "203.0.113.10/32"

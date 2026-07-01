@@ -1,0 +1,6 @@
+all:
+  hosts:
+    libify_dev:
+      ansible_host: "{{ lookup('env', 'LIBIFY_EC2_IP') }}"
+      ansible_user: ec2-user
+      ansible_ssh_common_args: '-o StrictHostKeyChecking=no'

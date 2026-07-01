@@ -1,24 +1,27 @@
+using Libify.Infraestructure.Services;
+
 namespace Libify.Infraestructure.Services.Interface
 {
-    /// <summary>
-    /// Proxy de acesso à API do Asaas (white-label). A chave da subconta (apiKey do usuário)
-    /// é passada por chamada para garantir o isolamento de dados entre os prestadores.
-    /// </summary>
-    public interface IAsaasClient
-    {
-        /// <summary>Cria uma subconta (KYC) na plataforma. Usa a API Key da plataforma.</summary>
-        Task<AsaasContaResponse> CriarSubcontaAsync(AsaasSubcontaRequest dadosConta, CancellationToken cancellationToken = default);
+  /// <summary>
+  /// Proxy de acesso à API do Asaas (white-label). A chave da subconta (apiKey do usuário)
+  /// é passada por chamada para garantir o isolamento de dados entre os prestadores.
+  /// </summary>
+  public interface IAsaasClient
+  {
+    Task<AsaasContaResponse> CriarSubcontaAsync(AsaasSubcontaRequest dadosConta, CancellationToken cancellationToken = default);
+    Task<AsaasContaResponse> ObterContaAsync(string apiKeySubconta, string accountId, CancellationToken cancellationToken = default);
 
-        /// <summary>Cadastra um pagador (customer) na subconta.</summary>
-        Task<AsaasClienteResponse> CriarClienteAsync(string apiKeySubconta, AsaasClienteRequest cliente, CancellationToken cancellationToken = default);
+    Task<AsaasClienteResponse> CriarClienteAsync(string apiKey, AsaasClienteRequest cliente, CancellationToken cancellationToken = default);
+    Task<AsaasClienteResponse> AtualizarClienteAsync(string apiKey, string customerId, AsaasClienteRequest cliente, CancellationToken cancellationToken = default);
 
-        /// <summary>Cria uma cobrança (PIX / Boleto / Cartão) na subconta.</summary>
-        Task<AsaasCobrancaResponse> CriarCobrancaAsync(string apiKeySubconta, AsaasCobrancaRequest cobranca, CancellationToken cancellationToken = default);
+    Task<AsaasCobrancaResponse> CriarCobrancaAsync(string apiKey, AsaasCobrancaRequest cobranca, CancellationToken cancellationToken = default);
+    Task<AsaasCobrancaResponse> ObterCobrancaAsync(string apiKey, string paymentId, CancellationToken cancellationToken = default);
+    Task CancelarCobrancaAsync(string apiKey, string paymentId, CancellationToken cancellationToken = default);
+    Task<AsaasPixQrCodeResponse> ObterPixQrCodeAsync(string apiKey, string paymentId, CancellationToken cancellationToken = default);
 
-        /// <summary>Obtém o QR Code PIX dinâmico de uma cobrança.</summary>
-        Task<AsaasPixQrCodeResponse> ObterPixQrCodeAsync(string apiKeySubconta, string paymentId, CancellationToken cancellationToken = default);
+    Task<AsaasAssinaturaResponse> CriarAssinaturaAsync(string apiKey, AsaasAssinaturaRequest assinatura, CancellationToken cancellationToken = default);
+    Task CancelarAssinaturaAsync(string apiKey, string subscriptionId, CancellationToken cancellationToken = default);
 
-        /// <summary>Cria um link de pagamento / página de checkout.</summary>
-        Task<AsaasLinkPagamentoResponse> CriarLinkPagamentoAsync(string apiKeySubconta, AsaasLinkPagamentoRequest linkPagamento, CancellationToken cancellationToken = default);
-    }
+    Task<AsaasLinkPagamentoResponse> CriarLinkPagamentoAsync(string apiKey, AsaasLinkPagamentoRequest linkPagamento, CancellationToken cancellationToken = default);
+  }
 }

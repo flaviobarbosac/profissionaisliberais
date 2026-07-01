@@ -17,11 +17,14 @@ using Libify.API.Middleware;
 using Libify.API.Validation;
 using Libify.Infraestructure.Configuration;
 using Libify.Infraestructure.Messaging;
+using Libify.Domain.Ports;
+using Libify.Infraestructure.Security;
 using Libify.Infraestructure.Services;
 using Libify.Infraestructure.Services.Interface;
 using Libify.Repository;
 using Libify.Repository.Interface;
 using Libify.Services;
+using Libify.Services.Asaas;
 using Libify.Services.Auth;
 using Libify.Services.Interface;
 
@@ -138,6 +141,11 @@ var asaasConfig = builder.Configuration.GetSection("Asaas").Get<AsaasConfig>() ?
 builder.Services.AddSingleton(asaasConfig);
 builder.Services.AddHttpClient<IAsaasClient, AsaasClient>()
     .AddStandardResilienceHandler();
+builder.Services.AddSingleton<ISecretProtector, AesSecretProtector>();
+builder.Services.AddScoped<IContaAsaasService, ContaAsaasService>();
+builder.Services.AddScoped<ICobrancaAsaasService, CobrancaAsaasService>();
+builder.Services.AddScoped<IPlanoAssinaturaService, PlanoAssinaturaService>();
+builder.Services.AddScoped<IAsaasWebhookProcessor, AsaasWebhookProcessor>();
 
 // AutoMapper
 builder.Services.AddAutoMapper(cfg => cfg.AddMaps(typeof(MappingProfiles).Assembly));

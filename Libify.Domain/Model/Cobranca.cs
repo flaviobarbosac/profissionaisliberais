@@ -38,6 +38,9 @@ namespace Libify.Domain.Model
         [MaxLength(255)]
         public string? AsaasPaymentId { get; set; }
 
+        [MaxLength(50)]
+        public string? AsaasStatusRaw { get; set; }
+
         [MaxLength(1000)]
         public string? PixQrCode { get; set; }
 

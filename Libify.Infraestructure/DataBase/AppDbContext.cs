@@ -29,6 +29,7 @@ namespace Libify.Infraestructure.Database
         public DbSet<Tarefa> Tarefa { get; set; }
         public DbSet<Post> Post { get; set; }
         public DbSet<Plano> Plano { get; set; }
+        public DbSet<AsaasWebhookEvent> AsaasWebhookEvent { get; set; }
         public DbSet<Dispositivo> Dispositivo { get; set; }
         public DbSet<RefreshToken> RefreshToken { get; set; }
         public DbSet<SyncWatermark> SyncWatermark { get; set; }
@@ -82,6 +83,15 @@ namespace Libify.Infraestructure.Database
             modelBuilder.Entity<RefreshToken>().HasIndex(e => e.TokenHash);
             modelBuilder.Entity<SyncWatermark>()
                 .HasIndex(e => new { e.UsuarioId, e.DispositivoId, e.Modulo }).IsUnique();
+
+            modelBuilder.Entity<AsaasWebhookEvent>()
+                .HasQueryFilter(e => e.DeletedAt == null);
+            modelBuilder.Entity<AsaasWebhookEvent>()
+                .HasIndex(e => e.EventId).IsUnique();
+            modelBuilder.Entity<Cobranca>()
+                .HasIndex(e => e.AsaasPaymentId);
+            modelBuilder.Entity<Plano>()
+                .HasIndex(e => e.AsaasSubscriptionId);
 
             // Tabelas do Outbox/Inbox transacional do MassTransit (entrega confiável + idempotência)
             modelBuilder.AddTransactionalOutboxEntities();

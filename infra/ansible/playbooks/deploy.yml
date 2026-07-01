@@ -1,0 +1,51 @@
+---
+- name: Deploy Libify stack on EC2
+  hosts: libify_dev
+  vars:
+    libify_dir: /opt/libify
+    aws_region: sa-east-1
+    project: libify
+    environment: dev
+  tasks:
+    - name: Ensure libify directory
+      file:
+        path: "{{ libify_dir }}"
+        state: directory
+        owner: ec2-user
+        group: ec2-user
+
+    - name: Copy docker-compose
+      copy:
+        src: ../docker/docker-compose.aws.yml
+        dest: "{{ libify_dir }}/docker-compose.yml"
+        owner: ec2-user
+        group: ec2-user
+
+    - name: Copy Caddyfile
+      copy:
+        src: ../docker/Caddyfile
+        dest: "{{ libify_dir }}/Caddyfile"
+        owner: ec2-user
+        group: ec2-user
+
+    - name: Generate .env from SSM
+      become_user: ec2-user
+      shell: |
+        set -e
+        cd {{ libify_dir }}
+        ACCOUNT=$(aws sts get-caller-identity --query Account --output text)
+        cat > .env << EOF
+        ECR_API=${ACCOUNT}.dkr.ecr.{{ aws_region }}.amazonaws.com/{{ project }}-{{ environment }}-api
+        ECR_WORKER=${ACCOUNT}.dkr.ecr.{{ aws_region }}.amazonaws.com/{{ project }}-{{ environment }}-worker
+        DB_CONNECTION=$(aws ssm get-parameter --name /{{ project }}/{{ environment }}/db/connection_string --with-decryption --query Parameter.Value --output text --region {{ aws_region }})
+        JWT_KEY=$(aws ssm get-parameter --name /{{ project }}/{{ environment }}/jwt/key --with-decryption --query Parameter.Value --output text --region {{ aws_region }})
+        ASAAS_WEBHOOK_BASE_URL=$(aws ssm get-parameter --name /{{ project }}/{{ environment }}/asaas/webhook_base_url --query Parameter.Value --output text --region {{ aws_region }})
+        CORS_ORIGIN=$(aws ssm get-parameter --name /{{ project }}/{{ environment }}/cors/origin --query Parameter.Value --output text --region {{ aws_region }})
+        API_FQDN=api.dev.libify.com.br
+        ASPIRE_FQDN=aspire.dev.libify.com.br
+        EOF
+        aws ecr get-login-password --region {{ aws_region }} | docker login --username AWS --password-stdin ${ACCOUNT}.dkr.ecr.{{ aws_region }}.amazonaws.com
+        docker compose pull || true
+        docker compose up -d
+      args:
+        executable: /bin/bash

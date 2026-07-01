@@ -1,0 +1,99 @@
+# Stack AWS dev — paridade com docker-compose.dev.yml (postgres -> RDS externo)
+name: libify-aws-dev
+
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: libify-rabbitmq
+    restart: unless-stopped
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: libify-redis
+    restart: unless-stopped
+    volumes:
+      - libify-redis:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  aspire-dashboard:
+    image: mcr.microsoft.com/dotnet/aspire-dashboard:9.0
+    container_name: libify-aspire
+    restart: unless-stopped
+    environment:
+      DOTNET_DASHBOARD_UNSECURED_ALLOW_ANONYMOUS: "true"
+
+  libify-api:
+    image: ${ECR_API}:latest
+    container_name: libify-api
+    restart: unless-stopped
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://+:8080
+      ConnectionStrings__DefaultConnection: ${DB_CONNECTION}
+      ConnectionStrings__RabbitMq: amqp://guest:guest@rabbitmq:5672
+      ConnectionStrings__Redis: redis:6379
+      Jwt__Key: ${JWT_KEY}
+      Asaas__WebhookBaseUrl: ${ASAAS_WEBHOOK_BASE_URL}
+      Cors__Origins__0: ${CORS_ORIGIN}
+      Cors__Origins__1: ${CORS_ORIGIN_AMPLIFY}
+      Google__ClientId: ${GOOGLE_CLIENT_ID}
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://aspire-dashboard:18889
+      OTEL_SERVICE_NAME: Libify.API
+    expose:
+      - "8080"
+
+  libify-worker:
+    image: ${ECR_WORKER}:latest
+    container_name: libify-worker
+    restart: unless-stopped
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      libify-api:
+        condition: service_started
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__DefaultConnection: ${DB_CONNECTION}
+      ConnectionStrings__RabbitMq: amqp://guest:guest@rabbitmq:5672
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://aspire-dashboard:18889
+      OTEL_SERVICE_NAME: Libify.Worker
+
+  caddy:
+    image: caddy:2-alpine
+    container_name: libify-caddy
+    restart: unless-stopped
+    environment:
+      API_FQDN: ${API_FQDN}
+      ASPIRE_FQDN: ${ASPIRE_FQDN}
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    depends_on:
+      - libify-api
+      - aspire-dashboard
+
+volumes:
+  libify-redis:
+  caddy-data:
+  caddy-config:

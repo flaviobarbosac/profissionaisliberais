@@ -1,0 +1,16 @@
+{
+	email admin@libify.com.br
+}
+
+# Acesso via IP ate DNS Registro.br propagar (http://54.232.84.74/health)
+:80 {
+	reverse_proxy libify-api:8080
+}
+
+{$API_FQDN} {
+	reverse_proxy libify-api:8080
+}
+
+{$ASPIRE_FQDN} {
+	reverse_proxy aspire-dashboard:18888
+}
