@@ -27,6 +27,9 @@ using Libify.Services;
 using Libify.Services.Asaas;
 using Libify.Services.Auth;
 using Libify.Services.Interface;
+using Libify.Services.Proposta;
+using Libify.Infraestructure.Database;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -146,6 +149,12 @@ builder.Services.AddScoped<IContaAsaasService, ContaAsaasService>();
 builder.Services.AddScoped<ICobrancaAsaasService, CobrancaAsaasService>();
 builder.Services.AddScoped<IPlanoAssinaturaService, PlanoAssinaturaService>();
 builder.Services.AddScoped<IAsaasWebhookProcessor, AsaasWebhookProcessor>();
+builder.Services.AddScoped<IPropostaPortalService, PropostaPortalService>();
+builder.Services.AddScoped<IPropostaFechamentoService, PropostaFechamentoService>();
+builder.Services.AddScoped<IPropostaAppService, PropostaAppService>();
+
+var portalConfig = builder.Configuration.GetSection("Portal").Get<PortalConfig>() ?? new PortalConfig();
+builder.Services.AddSingleton(portalConfig);
 
 // AutoMapper
 builder.Services.AddAutoMapper(cfg => cfg.AddMaps(typeof(MappingProfiles).Assembly));
@@ -247,6 +256,13 @@ if (!string.IsNullOrWhiteSpace(redisConnection))
     healthChecks.AddRedis(redisConnection, name: "redis");
 
 var app = builder.Build();
+
+if (app.Environment.IsDevelopment() || app.Environment.EnvironmentName == "Homologacao")
+{
+    using var scope = app.Services.CreateScope();
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    db.Database.Migrate();
+}
 
 app.UseSerilogRequestLogging();
 

@@ -93,6 +93,11 @@ namespace Libify.Infraestructure.Database
             modelBuilder.Entity<Plano>()
                 .HasIndex(e => e.AsaasSubscriptionId);
 
+            modelBuilder.Entity<Proposta>()
+                .HasIndex(e => e.TokenPublico)
+                .IsUnique()
+                .HasFilter("\"TokenPublico\" IS NOT NULL");
+
             // Tabelas do Outbox/Inbox transacional do MassTransit (entrega confiável + idempotência)
             modelBuilder.AddTransactionalOutboxEntities();
 

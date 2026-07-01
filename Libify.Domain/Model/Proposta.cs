@@ -36,6 +36,18 @@ namespace Libify.Domain.Model
         public DateTime? EnviadaEm { get; set; }
         public DateTime? RespondidaEm { get; set; }
 
+        /// <summary>Token opaco para visualização/resposta anônima pelo cliente.</summary>
+        [MaxLength(64)]
+        public string? TokenPublico { get; set; }
+
+        public DateTime? LinkExpiraEm { get; set; }
+
+        [MaxLength(500)]
+        public string? MotivoRecusa { get; set; }
+
+        [MaxLength(150)]
+        public string? RespondidoPor { get; set; }
+
         public ICollection<PropostaItem> Itens { get; set; } = new List<PropostaItem>();
     }
 }

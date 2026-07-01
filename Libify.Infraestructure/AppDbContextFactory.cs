@@ -14,7 +14,7 @@ namespace Libify.Infraestructure
         public AppDbContext CreateDbContext(string[] args)
         {
             var connectionString = Environment.GetEnvironmentVariable("PROFLIB_CONNECTION")
-                ?? "Host=localhost;Port=5432;Database=libify;Username=postgres;Password=postgres;";
+                ?? "Host=localhost;Port=5432;Database=libify_dev;Username=libify;Password=libify;";
 
             var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
             optionsBuilder.UseNpgsql(connectionString);
